@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
+// const dotenv =require('dotenv'); // do need it becaus in server.js we called it before monogodb
+// dotenv.config();
 
 
 const dbConnect = () => {
 
     // connect DB
-    mongoose.connect('mongodb+srv://prashantyug23cs:x6KpO51lv9tW8jL7@cluster0.wffsn.mongodb.net/', {
+    mongoose.connect(process.env.MONGODB_URL, {
         // useFindAndModify: false, // depriciated 
         // useCreateIndex: false, // depriciated 
         // useUnifiedTopology: false, // depriciated 

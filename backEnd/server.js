@@ -1,9 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const User = require('./models/User');
+const express = require('express'); 
+const dotenv = require('dotenv'); 
 const usersRoute = require('./routes/usersRoute');
-require('./config/dbConnect')();
 const error = require('./middlewares/errorMiddlewareHandler');
+dotenv.config(); // it should be pre because it accessiblle to its lower file and functions 
+require('./config/dbConnect')();
+
 
 
 // instace of express 
@@ -19,7 +20,6 @@ app.use(express.json());
 /* Note :
  here on every route we have : /api/uesrs/  
 so can do something that make it general  */
-
 app.use('/api/users', usersRoute);
 
 
@@ -29,7 +29,6 @@ app.use(error.errorMiddlewareHandler);
 
 
 // Server 
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is up and runing on ${PORT}`);
