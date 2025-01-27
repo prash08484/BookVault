@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const usersRoute = require('./routes/usersRoute');
-const error = require('./middlewares/errorMiddlewareHandler');
+const error = require('./middlewares/errorMiddlewareHandler'); 
 const bookRouter = require('./routes/bookRoutes');
 dotenv.config(); // it should be pre because it accessiblle to its lower file and functions 
 require('./config/dbConnect')();
@@ -26,14 +26,6 @@ app.use(express.json());
     
     // Book Routes
         app.use('/api/books',bookRouter);
-    
-
-
-
-
-
-
-
 
 
 
