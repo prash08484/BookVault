@@ -27,6 +27,11 @@ UserSchema.pre('save',async function(next){
     this.password=await bcrypt.hash(this.password,salt);
 });
 
+// VERIFY PASSWORD is exist or not 
+UserSchema.methods.isPasswordMatch=async function(enteredPassword){
+   return await bcrypt.compare(enteredPassword,this.password);
+};
+
 
 const User = mongoose.model('User', UserSchema);
 // now every time create a user then it create a 

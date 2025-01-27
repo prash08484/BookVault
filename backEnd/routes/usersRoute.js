@@ -2,8 +2,8 @@ const express = require('express');
 const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
+const generateToken = require('../utils/generateTokens');
 const usersRoute = express.Router();
-
 
 /*  
     Initially first line of register : --->   
@@ -14,7 +14,6 @@ const usersRoute = express.Router();
     with middleware : app.use('/api/users'); 
 
 */
-
 
 // REGISTER USER
 usersRoute.post('/register',
@@ -27,59 +26,43 @@ usersRoute.post('/register',
         const userCreated = await User.create({
             email, name, password
         });
-        res.send("user created successfully ");
+        res.json({
+            _id: userCreated.id,
+            name: userCreated.name,
+            password: userCreated.password,
+            email: userCreated.email,
+            token: generateToken(userCreated._id)
+        });
 
     })
 );
 
 
 // LOGIN USER
-// usersRoute.post('/login', asyncHandler(async (req, res) => {
-//     const { email, password } = req.body;
-//     const user = await User.findOne({ email: email }); // for email in db 
-
-
-//     if (user && (await bcrypt.compare(password,user.password))) {
-//         // set status code
-//         console.log("User is login successfully ");
-//         res.status(200);
-//         res.json({
-//             _id: user.id,
-//             name: user.name,
-//             password: user.password,
-//             email: user.email
-//         });
-//     }
-//     else {
-//         console.log("Fake user or wrong data  ");
-//         res.status(401);
-//         throw new Error('Invalid credentials');
-//     }
-// })
-
-
-// );
-
-
-
-
 usersRoute.post('/login', asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email }); // checking  email in db 
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-        console.log("User logged in successfully");
-        res.status(200).json({
+    console.log("user", user);
+
+    if (user && (await user.isPasswordMatch(password))) {
+        console.log("User is login successfully ");
+        res.status(200);
+        res.json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            password: user.password,
+            email: user.email,
+            token: generateToken(user._id)
         });
-    } else {
-        console.log("Fake user or wrong data");
+    }
+    else {
+        console.log("Fake user or wrong data  ");
         res.status(401);
         throw new Error('Invalid email or password');
     }
-}));
+})
+);
 
 
 
@@ -107,10 +90,7 @@ usersRoute.delete('/:id', (req, res) => {
 // FETCH USER
 usersRoute.get('/', (req, res) => {
 
-
-
     res.send("get");
-
 
 });
 
