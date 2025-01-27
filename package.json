@@ -1,0 +1,20 @@
+{
+  "name": "bookvault",
+  "version": "1.0.0",
+  "description": "book keeping web-app",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon backEnd/server.js"
+  },
+  "author": "Prashant Yadav",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
