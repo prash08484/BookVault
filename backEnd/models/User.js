@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // to hash the password 
 
 // schema : its mongoDB file for schema and encryption of pass 
 
