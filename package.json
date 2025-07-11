@@ -8,7 +8,8 @@
     "server": "nodemon backEnd/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm install && npm run build --prefix frontend"
+    "build": "cd frontend && npm install && npm run build",
+    "build-frontend": "cd frontend && npm install && npm run build"
   },
   "author": "Prashant Yadav",
   "license": "MIT",
