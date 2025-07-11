@@ -32,6 +32,7 @@ export const registerUser = (name, email, password) => {
 
       console.log('Attempting registration with:', { name, email, password });
       console.log('API URL being used:', process.env.REACT_APP_API_URL);
+      console.log('Full API instance config:', API.defaults.baseURL);
       
       const { data } = await API.post(
         '/api/users/register',
@@ -79,6 +80,11 @@ export const loginUser = (email, password) => {
           'Content-Type': 'application/json',
         },
       };
+      
+      console.log('Attempting login with:', { email, password });
+      console.log('API URL being used:', process.env.REACT_APP_API_URL);
+      console.log('Full API instance config:', API.defaults.baseURL);
+      
       const { data } = await API.post(
         '/api/users/login',
         { email, password },
@@ -92,10 +98,14 @@ export const loginUser = (email, password) => {
 
       localStorage.setItem('userAuthData', JSON.stringify(data));
     } catch (error) {
+      console.log('Login error details:', error);
+      console.log('Error response:', error.response);
+      console.log('Error message:', error.message);
+      console.log('Error status:', error.response?.status);
       // Every error has a response.data where we can grab the error and display to the user
       dispatch({
         type: USER_LOGIN_FAIL,
-        payload: error.response.data.message, //The message is a key for our error message in our routes
+        payload: error.response?.data?.message || error.message, //The message is a key for our error message in our routes
       });
     }
   };

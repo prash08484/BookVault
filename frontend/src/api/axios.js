@@ -1,11 +1,13 @@
 import axios from 'axios';
 
 // Debug: Log the API URL being used
-console.log('API Base URL:', process.env.REACT_APP_API_URL || 'http://localhost:5000');
+const apiUrl = process.env.REACT_APP_API_URL || 'https://bookvault-1.onrender.com';
+console.log('Environment REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+console.log('API Base URL being used:', apiUrl);
 
 // Create axios instance with base URL
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  baseURL: apiUrl,
 });
 
 // Add request interceptor to include auth token and retry logic
@@ -31,10 +33,17 @@ API.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
     
-    // If backend is sleeping (502/503) and we haven't retried yet
-    if ((response?.status === 502 || response?.status === 503) && !config._retry) {
-      config._retry = true;
-      console.log('Backend is waking up, retrying in 3 seconds...');
+    console.log('API Error:', {
+      status: response?.status,
+      message: error.message,
+      url: config?.url,
+      retryAttempt: config._retryCount || 0
+    });
+    
+    // If backend is sleeping (502/503/network error) and we haven't retried too many times
+    if ((response?.status === 502 || response?.status === 503 || error.code === 'NETWORK_ERROR' || !response) && (config._retryCount || 0) < 2) {
+      config._retryCount = (config._retryCount || 0) + 1;
+      console.log(`Backend issue detected, retry attempt ${config._retryCount}/2 in 3 seconds...`);
       
       // Wait 3 seconds for backend to wake up
       await new Promise(resolve => setTimeout(resolve, 3000));
