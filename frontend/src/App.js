@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import store from './redux/store/store';
 import { loadUserFromStorage } from './redux/actions/users/userActions';
+import './keepAwake'; // Keep backend awake
 import Navbar from './components/Navbar/Navbar';
 import HomePage from './components/HomePage/HomePage';
 import Login from './components/Auth/Login';
