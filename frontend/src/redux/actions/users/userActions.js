@@ -31,7 +31,7 @@ export const registerUser = (name, email, password) => {
       };
 
       const { data } = await axios.post(
-        '/api/users',
+        '/api/users/register',
         {
           name,
           email,
@@ -89,6 +89,19 @@ export const loginUser = (email, password) => {
       dispatch({
         type: USER_LOGIN_FAIL,
         payload: error.response.data.message, //The message is a key for our error message in our routes
+      });
+    }
+  };
+};
+
+export const loadUserFromStorage = () => {
+  return dispatch => {
+    const userAuthData = localStorage.getItem('userAuthData');
+    if (userAuthData) {
+      const userData = JSON.parse(userAuthData);
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: userData,
       });
     }
   };
@@ -197,3 +210,6 @@ export const fetchUsers = () => {
     }
   };
 };
+
+//Update user profile (alias for updateUser)
+export const updateUserProfile = updateUser;

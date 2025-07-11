@@ -166,3 +166,6 @@ export const updateBook = (id, bookData) => {
     }
   };
 };
+
+//Fetch book details (alias for fetchBook)
+export const fetchBookDetails = fetchBook;

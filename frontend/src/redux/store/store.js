@@ -1,49 +1,6 @@
-// import { configureStore } from '@reduxjs/toolkit';
-// import {thunk} from 'redux-thunk';
-// import userReducer from '../reducers/userAuthReducer';
-// import userProfileReducer from '../reducers/userProfileReducer';
-// import userUpdateReducer from '../reducers/userUpdateReducer';
-// import createdBookReducer from '../reducers/books/createdBookReducer';
-// import booksListReducer from '../reducers/books/booksListReducer';
-// import bookDetailReducer from '../reducers/books/bookDetailsReducer';
-// import usersListReducer from '../reducers/usersListReducer';
-
-// const reducer = {
-//   userLogin: userReducer,
-//   userProfile: userProfileReducer,
-//   updatedUser: userUpdateReducer,
-//   bookCreated: createdBookReducer,
-//   booksList: booksListReducer,
-//   bookDetails: bookDetailReducer,
-//   usersList: usersListReducer,
-// };
-
-// // Get the user in local storage
-// const userAuthFromStorage = localStorage.getItem('userAuthData')
-//   ? JSON.parse(localStorage.getItem('userAuthData'))
-//   : null;
-
-// const initialState = {
-//   userLogin: { userInfo: userAuthFromStorage },
-// };
-
-// // Store
-// const store = configureStore({
-//   reducer,
-//   preloadedState: initialState,
-//   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
-//   devTools: process.env.NODE_ENV !== 'production',
-// });
-
-// // export default store;
-
-// export  {store};
-
- 
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import userReducer from '../reducers/userAuthReducer';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { thunk } from 'redux-thunk';
+import userAuthReducer from '../reducers/userAuthReducer';
 import userProfileReducer from '../reducers/userProfileReducer';
 import userUpdateReducer from '../reducers/userUpdateReducer';
 import createdBookReducer from '../reducers/books/createdBookReducer';
@@ -54,35 +11,33 @@ import usersListReducer from '../reducers/usersListReducer';
 const middleware = [thunk];
 
 const reducer = combineReducers({
-  userLogin: userReducer,
+  userAuth: userAuthReducer,
   userProfile: userProfileReducer,
-  updatedUser: userUpdateReducer,
-  bookCreated: createdBookReducer,
+  userUpdate: userUpdateReducer,
+  createdBook: createdBookReducer,
   booksList: booksListReducer,
   bookDetails: bookDetailReducer,
+  bookUpdate: bookDetailReducer, // Using same reducer for update
   usersList: usersListReducer,
 });
 
-//store
-//Initial state
-
-//This is the initial state for all the reducers. NOTE the keys of the reducers above must be the same as the one you will pass as initialstate
-//The key must be the same and secondly look at the way the structure of the data in the store
-
-//Get the user in local storage
-
+// Get the user from local storage
 const userAuthFromStorage = localStorage.getItem('userAuthData')
   ? JSON.parse(localStorage.getItem('userAuthData'))
   : null;
 
 const initialState = {
-  userLogin: { userInfo: userAuthFromStorage },
+  userAuth: { userAuth: userAuthFromStorage },
 };
+
+// Enable Redux DevTools if available
+const composeEnhancers = 
+  (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
+  composeEnhancers(applyMiddleware(...middleware))
 );
 
 export default store;

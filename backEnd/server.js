@@ -1,15 +1,28 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');
 const usersRoute = require('./routes/usersRoute');
 const error = require('./middlewares/errorMiddlewareHandler'); 
 const bookRouter = require('./routes/bookRoutes');
-dotenv.config(); // it should be pre because it accessiblle to its lower file and functions 
+dotenv.config({ path: path.join(__dirname, '../.env') }); // Load .env from root directory
 require('./config/dbConnect')();
 
 
 
 // instace of express 
 const app = express();
+
+// CORS middleware to allow frontend requests
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // pass the data of body 
 app.use(express.json());

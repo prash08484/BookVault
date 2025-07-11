@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBook } from '../../redux/actions/books/bookActions';
+import { fetchBookDetails, updateBook } from '../../redux/actions/books/bookActions';
 import './Books.css';
 
-const AddBook = () => {
+const EditBook = () => {
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -12,17 +12,30 @@ const AddBook = () => {
   });
   const [errors, setErrors] = useState({});
 
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  const { loading, error, book } = useSelector(state => state.createdBook);
-  const { userAuth } = useSelector(state => state.userAuth);
+  const { book, loading: detailLoading } = useSelector(state => state.bookDetails);
+  const { loading, error, success } = useSelector(state => state.bookUpdate);
 
   useEffect(() => {
-    if (book && book._id) {
+    if (!book || book._id !== id) {
+      dispatch(fetchBookDetails(id));
+    } else {
+      setFormData({
+        title: book.title,
+        author: book.author,
+        category: book.category
+      });
+    }
+  }, [dispatch, id, book]);
+
+  useEffect(() => {
+    if (success) {
       navigate('/books');
     }
-  }, [book, navigate]);
+  }, [success, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -60,11 +73,7 @@ const AddBook = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const bookData = {
-        ...formData,
-        createdBy: userAuth._id
-      };
-      dispatch(createBook(bookData));
+      dispatch(updateBook(id, formData));
     }
   };
 
@@ -84,13 +93,24 @@ const AddBook = () => {
     'Other'
   ];
 
+  if (detailLoading) {
+    return (
+      <div className="book-form-container">
+        <div className="container">
+          <div className="spinner"></div>
+          <p className="text-center">Loading book details...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="book-form-container fade-in">
       <div className="container">
         <div className="form-card">
           <div className="form-header">
-            <h2>Add New Book</h2>
-            <p>Add a book to your personal library</p>
+            <h2>Edit Book</h2>
+            <p>Update your book information</p>
           </div>
           
           <form onSubmit={handleSubmit} className="book-form">
@@ -161,10 +181,10 @@ const AddBook = () => {
                 {loading ? (
                   <>
                     <div className="spinner-small"></div>
-                    Adding Book...
+                    Updating Book...
                   </>
                 ) : (
-                  'Add Book'
+                  'Update Book'
                 )}
               </button>
             </div>
@@ -175,4 +195,4 @@ const AddBook = () => {
   );
 };
 
-export default AddBook;
+export default EditBook;
