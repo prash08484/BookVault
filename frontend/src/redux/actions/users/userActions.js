@@ -30,6 +30,9 @@ export const registerUser = (name, email, password) => {
         headers: { 'Content-Type': 'application/json' },
       };
 
+      console.log('Attempting registration with:', { name, email, password });
+      console.log('API URL being used:', process.env.REACT_APP_API_URL);
+      
       const { data } = await API.post(
         '/api/users/register',
         {
@@ -48,6 +51,10 @@ export const registerUser = (name, email, password) => {
       //Save the user into localstorage
       localStorage.setItem('userAuthData', JSON.stringify(data));
     } catch (error) {
+      console.log('Registration error details:', error);
+      console.log('Error response:', error.response);
+      console.log('Error message:', error.message);
+      console.log('Error status:', error.response?.status);
       console.log('mongdb error', error);
       dispatch({
         type: USER_REGISTER_FAIL,

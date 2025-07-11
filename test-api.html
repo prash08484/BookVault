@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BookVault API Test</title>
+</head>
+<body>
+    <h1>BookVault API Connection Test</h1>
+    <button onclick="testAPI()">Test Backend Connection</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing...';
+            
+            try {
+                // Test 1: Backend health check
+                const response1 = await fetch('https://bookvault-1.onrender.com/');
+                result.innerHTML += '<br>Backend Status: ' + response1.status;
+                
+                // Test 2: Try to access users endpoint
+                const response2 = await fetch('https://bookvault-1.onrender.com/api/users/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                result.innerHTML += '<br>Users Endpoint: ' + response2.status;
+                
+                // Test 3: Test CORS
+                const response3 = await fetch('https://bookvault-1.onrender.com/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: 'Test User',
+                        email: 'test@test.com',
+                        password: 'testpass'
+                    })
+                });
+                result.innerHTML += '<br>Register Test: ' + response3.status;
+                const data = await response3.text();
+                result.innerHTML += '<br>Response: ' + data;
+                
+            } catch (error) {
+                result.innerHTML += '<br>Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
