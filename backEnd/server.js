@@ -15,7 +15,8 @@ const app = express();
 // CORS middleware to allow frontend requests
 const allowedOrigins = [
   'http://localhost:3000', // Development
-  'https://bookvault.vercel.app', // Production (update with your actual Vercel URL)
+  'https://book-vault-aoet.vercel.app', // Your actual Vercel URL
+  'https://bookvault.vercel.app', // Alternative URL
   'https://bookvault-frontend.vercel.app', // Alternative production URL
 ];
 
