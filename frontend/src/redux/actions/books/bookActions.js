@@ -1,4 +1,4 @@
-import axios from 'axios';
+import API from '../../../api/axios';
 import {
   CREATE_BOOK_FAIL,
   CREATE_BOOK_REQUEST,
@@ -31,7 +31,7 @@ export const createBook = bookData => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.post('/api/books', bookData, config);
+      const { data } = await API.post('/api/books', bookData, config);
 
       dispatch({
         type: CREATE_BOOK_SUCCESS,
@@ -60,7 +60,7 @@ export const fetchBooks = () => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.get('/api/books', config);
+      const { data } = await API.get('/api/books', config);
 
       dispatch({
         type: FETCH_BOOK_SUCCESS,
@@ -90,7 +90,7 @@ export const deleteBook = id => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.delete(`/api/books/${id}`, config);
+      const { data } = await API.delete(`/api/books/${id}`, config);
       dispatch({
         type: DELETE_BOOK_SUCCESS,
         payload: data,
@@ -122,7 +122,7 @@ export const fetchBook = (id, bookData) => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.get(`/api/books/${id}`, bookData, config);
+      const { data } = await API.get(`/api/books/${id}`, bookData, config);
 
       dispatch({
         type: BOOK_DETAIL_SUCCESS,
@@ -152,7 +152,7 @@ export const updateBook = (id, bookData) => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.put(`/api/books/${id}`, bookData, config);
+      const { data } = await API.put(`/api/books/${id}`, bookData, config);
       dispatch({
         type: BOOK_UPDATE_SUCCESS,
         payload: data,

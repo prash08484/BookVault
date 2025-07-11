@@ -1,4 +1,4 @@
-import axios from 'axios';
+import API from '../../../api/axios';
 
 import {
   USER_LOGIN_FAIL,
@@ -30,7 +30,7 @@ export const registerUser = (name, email, password) => {
         headers: { 'Content-Type': 'application/json' },
       };
 
-      const { data } = await axios.post(
+      const { data } = await API.post(
         '/api/users/register',
         {
           name,
@@ -72,7 +72,7 @@ export const loginUser = (email, password) => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.post(
+      const { data } = await API.post(
         '/api/users/login',
         { email, password },
         config
@@ -133,7 +133,7 @@ export const getUserProfile = () => {
           authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.get('/api/users/profile', config);
+      const { data } = await API.get('/api/users/profile', config);
       dispatch({
         type: USER_PROFILE_SUCCESS,
         payload: data,
@@ -164,7 +164,7 @@ export const updateUser = (name, email, password) => {
           authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.put(
+      const { data } = await API.put(
         '/api/users/profile/update',
         { name, email, password },
         config
@@ -197,7 +197,7 @@ export const fetchUsers = () => {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.get('/api/users', config);
+      const { data } = await API.get('/api/users', config);
       dispatch({
         type: FETCH_USERS_SUCCESS,
         payload: data,
