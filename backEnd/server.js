@@ -13,10 +13,20 @@ require('./config/dbConnect')();
 const app = express();
 
 // CORS middleware to allow frontend requests
+const allowedOrigins = [
+  'http://localhost:3000', // Development
+  'https://bookvault.vercel.app', // Production (update with your actual Vercel URL)
+  'https://bookvault-frontend.vercel.app', // Alternative production URL
+];
+
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin || '*');
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {
@@ -27,6 +37,28 @@ app.use((req, res, next) => {
 // pass the data of body 
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'BookVault API is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// API Routes
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to BookVault API',
+    version: '1.0.0',
+    endpoints: {
+      users: '/api/users',
+      books: '/api/books',
+      health: '/health'
+    }
+  });
+});
 
 // Routes 
 
