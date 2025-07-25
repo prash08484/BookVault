@@ -16,7 +16,7 @@ BookVault is a book-keeping web application built using the MERN stack (MongoDB,
 - 🌐 **Backend API**: RESTful API built with Express.js and MongoDB.
 
 ## 🛠️ Tech Stack
-- **Frontend**: React, Redux, HTML, CSS, JavaScript
+- **Frontend**: React 18, Redux Toolkit, HTML, CSS, JavaScript
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Authentication**: JWT (jsonwebtoken)
@@ -25,6 +25,22 @@ BookVault is a book-keeping web application built using the MERN stack (MongoDB,
 - **HTTP Client**: axios
 - **Environment Variables**: dotenv
 - **Development Tools**: nodemon, concurrently
+
+## 🔧 Requirements
+- **Node.js**: >=18.0.0
+- **npm**: >=8.0.0
+
+## 🔒 Security Features
+- **Environment-based CORS**: Configured with different security levels for development and production
+- **JWT Authentication**: Secure token-based authentication
+- **Password Encryption**: bcryptjs for secure password hashing
+- **Environment Variable Validation**: Validates required environment variables on startup
+- **Dependency Security**: Regular dependency auditing and vulnerability fixes
+
+## 🛡️ Security Notes
+- Database credentials should be stored in environment variables, never in code
+- The application uses secure CORS policies for production deployments
+- Development mode allows broader CORS access for local development
 
 ## 📂 Directory Structure
 
