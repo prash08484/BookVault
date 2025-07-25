@@ -12,6 +12,14 @@ require('./config/dbConnect')();
 // instace of express 
 const app = express();
 
+// Environment variable validation
+const requiredEnvVars = ['NODE_ENV'];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.warn(`Warning: Environment variable ${envVar} is not set`);
+  }
+}
+
 // CORS middleware to allow frontend requests
 const allowedOrigins = [
   'http://localhost:3000', // Development
@@ -20,14 +28,28 @@ const allowedOrigins = [
   'https://bookvault-frontend.vercel.app', // Alternative production URL
 ];
 
+// Add additional origins from environment variable if provided
+if (process.env.ALLOWED_ORIGINS) {
+  allowedOrigins.push(...process.env.ALLOWED_ORIGINS.split(','));
+}
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin) || !origin) {
+  
+  // Only allow specific origins in production
+  if (process.env.NODE_ENV === 'production') {
+    if (allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
+  } else {
+    // In development, allow all origins
     res.header('Access-Control-Allow-Origin', origin || '*');
   }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
+  
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {
@@ -89,14 +111,8 @@ app.listen(PORT, () => {
 
 
 /*
-
-YT LEC: https://www.youtube.com/watch?v=iPbdQwKpKCQ
-User name : prashantyug23cs
-Password: x6KpO51lv9tW8jL7
-Link : mongodb+srv://prashantyug23cs:x6KpO51lv9tW8jL7@cluster0.wffsn.mongodb.net/
-
-npm run server 
-
-
+Development Notes:
+- Database configuration is handled through environment variables
+- Use npm run server to start the development server
 */
 
